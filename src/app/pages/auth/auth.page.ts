@@ -24,7 +24,8 @@ export class AuthPage implements OnInit {
   }
 
   async submit(){
-    /* console.log(this.form.value); */
+    if (this.form.valid) {
+      /* console.log(this.form.value); */
 
     const loading = await this.UtilsSvs.loading();
     await loading.present();
@@ -48,11 +49,13 @@ export class AuthPage implements OnInit {
     }).finally(() => {
       loading.dismiss();
     })
+    }
   }
 
 
   async getUserInfo(uid: string){
-    /* console.log(this.form.value); */
+    if (this.form.valid) {
+      /* console.log(this.form.value); */
 
     const loading = await this.UtilsSvs.loading();
     await loading.present();
@@ -88,5 +91,6 @@ export class AuthPage implements OnInit {
     }).finally(() => {
       loading.dismiss();
     })
+    }
   }
 }
