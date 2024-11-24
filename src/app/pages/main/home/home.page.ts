@@ -49,4 +49,13 @@ export class HomePage implements OnInit{
     }
   
   }
+
+  /* Genera el codigo QR de forma aleatoria */
+  generateRandomQR() {
+    // Genera un código aleatorio usando caracteres alfanuméricos
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    this.qrText = Array.from({ length: 12 }, () =>
+      characters.charAt(Math.floor(Math.random() * characters.length))
+    ).join('');
+  }
 }

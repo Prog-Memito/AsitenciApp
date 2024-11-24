@@ -53,13 +53,11 @@
         </div>
       </div>
 
-      <ion-textarea
-      label="Escribe algo para generar el QR"
-      labelPlacement="stacked"
-      fill="outline"
-      [(ngModel)]="qrText">
-      
-      </ion-textarea>
+      <!-- Btn que genera el QR -->
+      <ion-button (click)="generateRandomQR()" class="generate-button" expand="block" color="primary" mode="ios">
+        Generar QR
+      </ion-button>
+
     </div>
   </div>
 </ion-content>
