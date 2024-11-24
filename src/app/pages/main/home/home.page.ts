@@ -1,24 +1,52 @@
+import { ScanResult, Barcode } from './../../../../../node_modules/@capacitor-mlkit/barcode-scanning/dist/esm/definitions.d';
 import { Component, OnInit, inject } from '@angular/core';
-import { FirebaseService } from 'src/app/services/firebase.service';
-import { UtilsService } from 'src/app/services/utils.service';
-
+import { ModalController, Platform } from '@ionic/angular';
+import { BarcodeScanningModalComponent } from './barcode-scanning-modal.component';
+import { BarcodeScanner, LensFacing } from '@capacitor-mlkit/barcode-scanning';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
   styleUrls: ['./home.page.scss'],
 })
-export class HomePage implements OnInit {
+export class HomePage implements OnInit{
 
-  FirebaseSvc = inject(FirebaseService);
-  utilsSvs = inject(UtilsService);
+  segment = 'scan';
+  qrText = ''
 
-  ngOnInit() {
+  scanResult = '';
+
+  constructor(
+    private modalController: ModalController,
+    private platform: Platform
+  ) { }
+
+  ngOnInit(): void {
+    if(this.platform.is('capacitor')){
+      BarcodeScanner.isSupported().then();
+      BarcodeScanner.checkPermissions().then();
+      BarcodeScanner.removeAllListeners();
+    }
   }
 
-  /* Cerrar sesión */
-  singOut() {
-    this.FirebaseSvc.singOut();
-  }
+  async startScan() {
+    const modal = await this.modalController.create({
+    component: BarcodeScanningModalComponent,
+    cssClass: 'barcode-scanning-modal',
+    showBackdrop: false,
+    componentProps: { 
+      formats: [],
+      LensFacing: LensFacing.Back
+     }
+    });
+  
+    await modal.present();
 
+    const { data } = await modal.onWillDismiss();
+
+    if(data) {
+      this.scanResult = data?.Barcode?.displayValue;
+    }
+  
+  }
 }
