@@ -1,6 +1,6 @@
 import { ScanResult, Barcode } from './../../../../../node_modules/@capacitor-mlkit/barcode-scanning/dist/esm/definitions.d';
 import { Component, OnInit, inject } from '@angular/core';
-import { ModalController, Platform } from '@ionic/angular';
+import { AlertController, ModalController, Platform } from '@ionic/angular';
 import { BarcodeScanningModalComponent } from './barcode-scanning-modal.component';
 import { BarcodeScanner, LensFacing } from '@capacitor-mlkit/barcode-scanning';
 
@@ -13,41 +13,40 @@ export class HomePage implements OnInit{
 
   segment = 'scan';
   qrText = ''
+  isSupported = false;
+  barcodes: Barcode[] = [];
 
-  scanResult = '';
-
-  constructor(
-    private modalController: ModalController,
-    private platform: Platform
+  constructor(private alertController: AlertController
   ) { }
 
   ngOnInit(): void {
-    if(this.platform.is('capacitor')){
-      BarcodeScanner.isSupported().then();
-      BarcodeScanner.checkPermissions().then();
-      BarcodeScanner.removeAllListeners();
-    }
+    BarcodeScanner.isSupported().then((result) => {
+      this.isSupported = result.supported;
+    });
   }
 
-  async startScan() {
-    const modal = await this.modalController.create({
-    component: BarcodeScanningModalComponent,
-    cssClass: 'barcode-scanning-modal',
-    showBackdrop: false,
-    componentProps: { 
-      formats: [],
-      LensFacing: LensFacing.Back
-     }
-    });
-  
-    await modal.present();
-
-    const { data } = await modal.onWillDismiss();
-
-    if(data) {
-      this.scanResult = data?.Barcode?.displayValue;
+  async scan(): Promise<void> {
+    const granted = await this.requestPermissions();
+    if (!granted) {
+      this.presentAlert();
+      return;
     }
-  
+    const { barcodes } = await BarcodeScanner.scan();
+    this.barcodes.push(...barcodes);
+  }
+
+  async requestPermissions(): Promise<boolean> {
+    const { camera } = await BarcodeScanner.requestPermissions();
+    return camera === 'granted' || camera === 'limited';
+  }
+
+  async presentAlert(): Promise<void> {
+    const alert = await this.alertController.create({
+      header: 'Permiso denegado',
+      message: 'Para usar la aplicación autorizar los permisos de cámara',
+      buttons: ['OK'],
+    });
+    await alert.present();
   }
 
   /* Genera el codigo QR de forma aleatoria */

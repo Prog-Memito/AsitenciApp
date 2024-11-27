@@ -23,13 +23,14 @@
 
       <h6 class="scan-label">Escanea el codigo QR para marcar tu asistencia </h6>
 
-      <ion-button (click)="startScan()" class="submit" expand="block">
+      <ion-button (click)="scan()" class="submit" expand="block">
         Scan
         <ion-icon slot="end" name="scan-outline"></ion-icon>
       </ion-button>
 
       <ion-button routerLink="/main/asistencia" expand="block" mode="ios">
-        Click me
+        Asistencia
+        <ion-icon slot="end" name="calendar-clear-outline"></ion-icon>
       </ion-button>
     </div>
   </div>
