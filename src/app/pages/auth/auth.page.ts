@@ -16,81 +16,81 @@ export class AuthPage implements OnInit {
     password: new FormControl('', [Validators.required])
   })
 
-  FirebaseSvc = inject(FirebaseService)
+  FirebaseSvc = inject(FirebaseService);
   UtilsSvs = inject(UtilsService)
 
 
   ngOnInit() {
   }
 
-  async submit(){
+  async submit() {
     if (this.form.valid) {
       /* console.log(this.form.value); */
 
-    const loading = await this.UtilsSvs.loading();
-    await loading.present();
+      const loading = await this.UtilsSvs.loading();
+      await loading.present();
 
-    this.FirebaseSvc.singIn(this.form.value as User).then(res=> {
-      /* console.log(res); */
+      this.FirebaseSvc.singIn(this.form.value as User).then(res => {
+        /* console.log(res); */
 
-      this.getUserInfo(res.user.uid);
+        this.getUserInfo(res.user.uid);
 
-    }).catch(error => {
-      console.log(error);
+      }).catch(error => {
+        console.log(error);
 
-      this.UtilsSvs.presentToast({
-        message: error.message,
-        duration: 2500,
-        color: 'primary',
-        position: 'middle',
-        icon: 'alert-circle-outline'
+        this.UtilsSvs.presentToast({
+          message: error.message,
+          duration: 2500,
+          color: 'primary',
+          position: 'middle',
+          icon: 'alert-circle-outline'
+        })
+
+      }).finally(() => {
+        loading.dismiss();
       })
-      
-    }).finally(() => {
-      loading.dismiss();
-    })
     }
   }
 
 
-  async getUserInfo(uid: string){
+  async getUserInfo(uid: string) {
     if (this.form.valid) {
       /* console.log(this.form.value); */
 
-    const loading = await this.UtilsSvs.loading();
-    await loading.present();
+      const loading = await this.UtilsSvs.loading();
+      await loading.present();
 
-    let path = 'users/${uid}'
+      let path = 'users/${uid}'
 
-    this.FirebaseSvc.getDocument(path).then((user: User)=> {
+      this.FirebaseSvc.getDocument(path).then((user: User) => {
 
-      this.UtilsSvs.saveInLocalStorage('user', user)
-      this.UtilsSvs.routerLink('/main/home');
-      this.form.reset();
+        this.UtilsSvs.saveInLocalStorage('user', user)
+        this.UtilsSvs.routerLink('/main/home');
+        this.form.reset();
 
-      this.UtilsSvs.presentToast({
-        message: `Te damos la bienvenida ${user.name}`,
-        duration: 1500,
-        color: 'primary',
-        position: 'middle',
-        icon: 'person-circle-outline'
+        this.UtilsSvs.presentToast({
+          message: `Te damos la bienvenida ${user.name}`,
+          duration: 1500,
+          color: 'primary',
+          position: 'middle',
+          icon: 'person-circle-outline'
+        })
+
+        /* console.log(user); */
+      }).catch(error => {
+        console.log(error);
+
+        this.UtilsSvs.presentToast({
+          message: error.message,
+          duration: 2500,
+          color: 'primary',
+          position: 'middle',
+          icon: 'alert-circle-outline'
+        })
+
+      }).finally(() => {
+        loading.dismiss();
       })
-
-      /* console.log(user); */
-    }).catch(error => {
-      console.log(error);
-
-      this.UtilsSvs.presentToast({
-        message: error.message,
-        duration: 2500,
-        color: 'primary',
-        position: 'middle',
-        icon: 'alert-circle-outline'
-      })
-      
-    }).finally(() => {
-      loading.dismiss();
-    })
     }
   }
 }
