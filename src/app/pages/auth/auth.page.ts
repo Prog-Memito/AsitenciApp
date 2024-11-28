@@ -60,7 +60,7 @@ export class AuthPage implements OnInit {
       const loading = await this.UtilsSvs.loading();
       await loading.present();
 
-      let path = 'users/${uid}'
+      let path = `users/${uid}`
 
       this.FirebaseSvc.getDocument(path).then((user: User) => {
 

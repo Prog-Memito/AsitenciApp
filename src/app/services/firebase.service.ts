@@ -41,7 +41,7 @@ export class FirebaseService {
     return createUserWithEmailAndPassword(getAuth(), user.email, user.password)
   }
 
-  Update
+  /* Update */
   updateUser(displayName: string) {
     return updateProfile(getAuth().currentUser, { displayName })
   }
