@@ -4,6 +4,8 @@ import { AlertController, ModalController, Platform } from '@ionic/angular';
 import { BarcodeScanningModalComponent } from './barcode-scanning-modal.component';
 import { BarcodeScanner, LensFacing } from '@capacitor-mlkit/barcode-scanning';
 
+import { Asistencia } from 'src/app/models/asistencia.model';
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.page.html',
@@ -57,4 +59,8 @@ export class HomePage implements OnInit{
       characters.charAt(Math.floor(Math.random() * characters.length))
     ).join('');
   }
+
+  /* Marca la asistencia */
+
+  
 }
